@@ -71,3 +71,21 @@
 - 樣式與靜態資源管理
     - `globals.css`: 控制全域樣式（如網頁背景）。若要清除預設樣式，須保留檔案最上方的三行 `@tailwind` 指令（若有啟用 Tailwind CSS），其餘皆可刪除
     - `favicon.ico`: 瀏覽器分頁標籤圖示，直接替換該檔案即可更新全站圖示
+
+## Server Component
+- Next.js 預設所有元件都是 Server Component
+- Server Component 元件無法使用 useState 或綁定 onClick 事件
+
+## Client Component
+- 要實作「點擊按鈕」這類需要與瀏覽器互動的功能，必須將該元件宣告為 Client Component
+- 在 Component 第一行書入 ``'use client';`` 宣告為 Client Component
+
+# React
+## Components
+- React component 是一個回傳標記語言的 JavaScript 函式
+- React component 名稱一定要以大寫字母開頭，而 HTML 標記語言則必須為小寫字母
+- export default 關鍵字指定檔案中的主要 component
+- React 應用程式由 components 組成
+
+# TypeScript
+- 出現「不是模組 (is not a module)」的錯誤，是因為 TypeScript 認定該檔案為全域腳本，而非獨立模組。在 TypeScript 中，檔案內部必須包含至少一個 export 或 import 語句，才會被視為模組
