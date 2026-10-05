@@ -89,3 +89,58 @@
 
 # TypeScript
 - 出現「不是模組 (is not a module)」的錯誤，是因為 TypeScript 認定該檔案為全域腳本，而非獨立模組。在 TypeScript 中，檔案內部必須包含至少一個 export 或 import 語句，才會被視為模組
+
+# Shadcn UI
+- [shadcn/ui](https://ui.shadcn.com/)
+
+## 安裝 Shadcn UI
+- 於 Dev.Frontend/[專案名稱] 路徑下輸入指令: ``npx shadcn@latest init --preset b5KafHpnE --template next``
+- 須注意因為  Shadcn UI 依賴 Tailwind CSS v4，Next.js 預設有搭載，但如果移除以下設定則會安裝失敗
+    - /src/app/globals.css 中的 ``@import "tailwindcss";`` 引用
+    - /src/app/layout.tsx 中的 ``import "./globals.css";`` 引用
+
+## 根據需求安裝元件
+- 初始化完成後，根據需求將元件安裝到專案中
+- 元件的原始碼會被下載到 `src/components/ui` 資料夾內
+- 建議先安裝以下常用元件：
+    ```bash
+    npx shadcn@latest add button
+    npx shadcn@latest add card
+    npx shadcn@latest add badge
+    npx shadcn@latest add avatar
+    ```
+
+## 深色模式設定
+1. 安裝 next-themes
+    - 於 Dev.Frontend/[專案名稱] 路徑下輸入指令: ``npm install next-themes``
+2. 於 components 中新增 ``theme-provider.tsx``:
+    ```tsx
+    "use client"
+
+    import * as React from "react"
+    import { ThemeProvider as NextThemesProvider } from "next-themes"
+
+    export function ThemeProvider({
+        children,
+        ...props
+    }: React.ComponentProps<typeof NextThemesProvider>) {
+        return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+    }
+    ```
+3. 調整 src/app/layout.tsx
+    1. 引用 ``theme-provider.tsx`` : ``import { ThemeProvider } from "@/components/theme-provider"``
+    2. ``<html>`` 屬性中加上 ``suppressHydrationWarning``
+        - 因 next-themes 會在客戶端載入時立即修改 ``<html>`` 標籤的屬性（加入 class="dark" 等），這會導致與伺服器端渲染 (SSR) 輸出的 HTML 結構不一致，進而引發 React Hydration Error。在 ``<html>`` 加上 ``suppressHydrationWarning`` 是官方建議用來忽略此特定層級屬性比對錯誤的標準做法
+    3. ``<body>`` 加入 ``ThemeProvider``
+        ``` html
+        <body>
+            <ThemeProvider
+            attribute="class"       // 以 class 屬性 (dark) 來控制樣式
+            defaultTheme="system"   // 預設跟隨作業系統設定
+            enableSystem            // 啟用系統主題偵測
+            disableTransitionOnChange // 避免切換瞬間發生 CSS 漸變閃爍
+            >
+                {children}
+            </ThemeProvider>
+        </body>
+        ```
