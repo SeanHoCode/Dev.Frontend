@@ -1,4 +1,4 @@
-import EmploymentArea from '@/components/EmploymentArea';
+import EmploymentArea from '@/components/resume/employment-area';
 
 export default function Home() {
     // 模擬從 API 或資料庫取得的 JSON 資料
