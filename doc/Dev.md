@@ -145,7 +145,3 @@
         </body>
         ```
 
-# lucide-react
-- 專為 React 應用程式設計的開源向量圖示庫
-## 安裝
-- 於 Dev.Frontend/[專案名稱] 路徑下輸入指令: ``npm install lucide-react``

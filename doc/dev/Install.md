@@ -40,6 +40,8 @@
                 </ThemeProvider>
             </body>
             ```
+4. 安裝 lucide-react
+- 於 Dev.Frontend/[專案名稱] 路徑下輸入指令: ``npm install lucide-react``
 
 # 建立 Next.js 專案時自動產生的專案檔案
 ## .next

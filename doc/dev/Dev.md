@@ -31,7 +31,6 @@
 # TypeScript
 - 出現「不是模組 (is not a module)」的錯誤，是因為 TypeScript 認定該檔案為全域腳本，而非獨立模組。在 TypeScript 中，檔案內部必須包含至少一個 export 或 import 語句，才會被視為模組
 
-
 # Shadcn UI
 - [shadcn/ui](https://ui.shadcn.com/)
 ## 根據需求安裝元件
@@ -44,3 +43,6 @@
     npx shadcn@latest add badge
     npx shadcn@latest add avatar
     ```
+
+# lucide-react
+- 專為 React 應用程式設計的開源向量圖示庫
