@@ -1,6 +1,7 @@
 import React, { ComponentType } from 'react';
 // 引入具體的 App 元件
 import { AboutMeApp } from '@/components/operating-system/apps/AboutMeApp';
+import { EmploymentApp } from '@/components/operating-system/apps/EmploymentApp';
 
 /**
  * 應用程式元件註冊表 (APP_REGISTRY)
@@ -16,6 +17,8 @@ import { AboutMeApp } from '@/components/operating-system/apps/AboutMeApp';
 export const APP_REGISTRY: Record<string, ComponentType<Record<string, unknown>>> = {
   AboutMeApp: AboutMeApp as ComponentType<Record<string, unknown>>,
   about_me: AboutMeApp as ComponentType<Record<string, unknown>>, // 支援以小寫 id 查詢
+  EmploymentApp: EmploymentApp as ComponentType<Record<string, unknown>>,
+  employment: EmploymentApp as ComponentType<Record<string, unknown>>, // 支援以小寫 id 查詢
   // 未來的新應用程式開發完成後在此擴充登记：
   // ProjectsApp: ProjectsApp,
   // SettingsApp: SettingsApp,

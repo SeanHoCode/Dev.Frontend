@@ -32,6 +32,16 @@ export const initialDesktopApps: DesktopApp[] = [
     description: '個人簡介與專業技能',
     isPinned: true                // 釘選至開始功能表常用/釘選清單
   },
+  { 
+    id: 'employment', 
+    title: '經歷', 
+    label: '經歷', 
+    icon: 'FileText',                 // 儲存 Lucide 圖示名稱字串，易於後端 API 序列化 JSON 傳遞
+    component: 'EmploymentApp',      // 對應 appRegistry 內註冊的元件名稱
+    windowId: 'employment',
+    description: '工作經歷與專業技能',
+    isPinned: true                // 釘選至開始功能表常用/釘選清單
+  },
   // 【擴充範例】：未來若有新的 Side Projects 想要放到桌面上，解開下方註解即可：
   // { 
   //   id: 'projects', 
