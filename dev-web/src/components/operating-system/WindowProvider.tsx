@@ -1,22 +1,14 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
+import { WindowData, WindowContextType } from '@/types/operating-system/window';
 
-export type WindowData = {
-  id: string;
-  minimized: boolean;
-};
+export const WindowContext = createContext<WindowContextType | undefined>(undefined);
 
-interface WindowContextType {
-  windows: WindowData[];
-  openWindow: (id: string) => void;
-  closeWindow: (id: string) => void;
-  toggleMinimize: (id: string) => void;
-  closeAllWindows: () => void;
-}
-
-const WindowContext = createContext<WindowContextType | undefined>(undefined);
-
+/**
+ * 視窗狀態提供者元件 (Provider Component)
+ * 檔名 WindowProvider.tsx 與元件名稱一致
+ */
 export function WindowProvider({ children }: { children: React.ReactNode }) {
   const [windows, setWindows] = useState<WindowData[]>([]);
 
@@ -24,7 +16,6 @@ export function WindowProvider({ children }: { children: React.ReactNode }) {
     setWindows((prev) => {
       const exists = prev.find((w) => w.id === id);
       if (exists) {
-        // 如果已經存在，確保它沒有被最小化
         return prev.map((w) => w.id === id ? { ...w, minimized: false } : w);
       }
       return [...prev, { id, minimized: false }];
@@ -52,10 +43,7 @@ export function WindowProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useWindowContext() {
-  const context = useContext(WindowContext);
-  if (context === undefined) {
-    throw new Error('useWindowContext must be used within a WindowProvider');
-  }
-  return context;
-}
+// 重新匯出 Hook 以相容既有引用
+export { useWindowContext } from '@/hooks/useWindowContext';
+// 重新匯出型別以維持相容性
+export type { WindowData, WindowContextType } from '@/types/operating-system/window';

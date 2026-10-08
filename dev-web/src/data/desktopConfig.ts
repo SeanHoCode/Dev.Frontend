@@ -1,12 +1,36 @@
+import { DesktopApp, StartMenuItem } from '@/types/operating-system/desktop';
 import { FileText, Folder, User, Settings, LayoutGrid, Moon } from 'lucide-react';
 
-export const desktopApps = [
-  { id: 'about_me', label: '關於我', icon: User, windowId: 'about_me' },
-  // 預留給未來的 Projects
-  // { id: 'projects', label: 'Side Projects', icon: Folder, windowId: 'projects' },
+/**
+ * 桌面 Apps 預設資料 (類似 startMenuItems 結構化清單)
+ * 提供初始值並作為 API 尚未連線或備援時的資料來源
+ */
+export const initialDesktopApps: DesktopApp[] = [
+  { 
+    id: 'about_me', 
+    title: '關於我 (About Me)', 
+    label: '關於我', 
+    icon: 'User', 
+    component: 'AboutMeApp', 
+    windowId: 'about_me',
+    description: '個人簡介與專業技能' 
+  },
+  // 預留給未來的 Projects，動態新增即可直接生效：
+  // { 
+  //   id: 'projects', 
+  //   title: 'Side Projects (作品集)', 
+  //   label: 'Side Projects', 
+  //   icon: 'Folder', 
+  //   component: 'ProjectsApp', 
+  //   windowId: 'projects',
+  //   description: '專案作品展示' 
+  // },
 ];
 
-export const startMenuItems = [
+// 向後相容既有參照
+export const desktopApps = initialDesktopApps;
+
+export const startMenuItems: StartMenuItem[] = [
   { 
     id: 'home', 
     label: '首頁 (Desktop)', 

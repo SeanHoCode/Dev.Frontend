@@ -1,4 +1,4 @@
-import { DesktopEnvironment } from '@/components/desktop/DesktopEnvironment';
+import { DesktopEnvironment } from '@/components/operating-system/DesktopEnvironment';
 
 export default function Home() {
   return (

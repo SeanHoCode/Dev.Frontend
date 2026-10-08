@@ -1,7 +1,7 @@
 'use client'; // 宣告為 Client Component，允許使用 React Hooks 與互動事件
 import { useState } from 'react';
 import { formatPeriod } from '../../lib/format';
-import type { Employment } from '../../types/resume';
+import type { Employment } from '../../types/resume/resume';
 
 // 引入 shadcn 元件 (請根據你專案實際的 alias 路徑調整，通常為 @/components/ui/...)
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
