@@ -33,7 +33,7 @@ export const metadata: Metadata = {
  * - 這是 Next.js App Router 的最外層架構，所有路由頁面 (page.tsx) 都會作為 children 注入到這裡。
  * - 它是 Server Component (伺服器元件)，因為頂部沒有宣告 "use client"。
  *
- * @param children 代表當前路由頁面所對應的內容 (例如 app/page.tsx 或 app/resume/page.tsx)
+ * @param children 代表當前路由頁面所對應的內容 (例如 app/page.tsx 或 app/resume/employment/page.tsx)
  * @param Readonly<{ children: React.ReactNode }> TypeScript 語法：代表傳入的 props 是唯讀的，children 為任何合法的 React 節點
  */
 export default function RootLayout({

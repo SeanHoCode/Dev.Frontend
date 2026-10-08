@@ -6,7 +6,7 @@ import { initialEmployments } from '@/data/resumeData';
 import { apiClient } from '@/lib/apiClient';
 
 /**
- * 取得履歷經歷資料服務 (fetchEmployments)
+ * 取得工作經歷資料服務 (fetchEmployments)
  * 
  * 【初學者觀念 - 外部後端串接與非同步 Promise】：
  * 1. async / await 與 Promise：

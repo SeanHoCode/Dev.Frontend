@@ -4,7 +4,7 @@
 // 涉及瀏覽器端的狀態互動，因此必須加上 "use client"。
 "use client";
 
-// 引入 Next.js 路由 Hook，用於讀取當前的 URL 路徑 (例如 "/" 或 "/resume")
+// 引入 Next.js 路由 Hook，用於讀取當前的 URL 路徑 (例如 "/" 或 "/resume/employment")
 import { usePathname } from 'next/navigation';
 
 // 引入底部工作列元件
@@ -25,7 +25,7 @@ import { DesktopAppsProvider } from '@/components/operating-system/DesktopAppsPr
  * 【主要作用與職責 (Core Purpose)】：
  * 本元件是全站頁面的中樞版面調度器 (Layout Dispatcher)，負責：
  * 1. 注入全域狀態容器 (Providers Injection)：統一裝載 `DesktopAppsProvider` 與 `WindowProvider`，讓全站任意子元件皆可存取桌面 App 與視窗狀態。
- * 2. 路由分支動態排版 (Route-based Layout)：透過 `usePathname()` 偵測當前網址，針對首頁桌面模式 (`/`) 與一般內容模式 (`/resume` 等) 提供最佳化的容器邊距與捲軸設定。
+ * 2. 路由分支動態排版 (Route-based Layout)：透過 `usePathname()` 偵測當前網址，針對首頁桌面模式 (`/`) 與一般內容模式 (`/resume/employment` 等) 提供最佳化的容器邊距與捲軸設定。
  * 3. 常駐作業系統工作列 (Persistent Taskbar)：在所有頁面底部持續釘選 `<Taskbar />`，維持作業系統般的一致性操作體驗。
  * 
  * 【初學者觀念 - Context Provider 與版面切換】：
@@ -33,7 +33,7 @@ import { DesktopAppsProvider } from '@/components/operating-system/DesktopAppsPr
  *    只要被它們包在裡面的所有子元件 (children)，都可以隨時透過對應的 Hook 取用狀態，不需要一層層傳遞 Props (避免 Prop Drilling)。
  * 2. 透過 usePathname() 判斷當前所在頁面：
  *    - 若在首頁 ("/")：代表模擬的 Windows 桌面，讓內容全螢幕撐滿。
- *    - 若在其他頁面 (如 "/resume")：提供標準的網頁版面 (含頂部 Header、內容限制寬度、底部保留工作列間距)。
+ *    - 若在其他頁面 (如 "/resume/employment")：提供標準的網頁版面 (含頂部 Header、內容限制寬度、底部保留工作列間距)。
  *
  * @param children 子層頁面內容 (由 app/layout.tsx 傳入)
  */
@@ -50,7 +50,7 @@ export function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
           // 【情境 A：首頁】Windows 桌面模式，不需要上方導覽列，直接全螢幕顯示桌面內容
           children
         ) : (
-          // 【情境 B：其他專頁 (例如 /resume)】標準文章或內容檢視模式
+          // 【情境 B：其他專頁 (例如 /resume/employment)】標準文章或內容檢視模式
           // - flex-1 flex flex-col: 使用 Flexbox 彈性排版，垂直方向排列
           // - min-h-screen: 最低高度佔滿視窗
           // - pb-12: 底部留出 48px (3rem) 的內距，避免內容被固定的底部 Taskbar 遮擋

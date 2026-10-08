@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 /**
- * 單筆工作/實習經歷展示卡片 (EmploymentArea)
+ * 單筆工作/實習經歷展示卡片 (EmploymentCard)
  * 
  * 【主要作用與職責 (Core Purpose)】：
  * 本元件是履歷模組中用來呈現「單一筆職涯經歷」的卡片視圖 (Presentation Component)，負責：
@@ -33,7 +33,7 @@ import { Badge } from '@/components/ui/badge';
  * 3. 條件渲染 {isExpanded && ( ... )}：
  *    在 JSX 中，利用邏輯 AND (&&) 運算子。當 isExpanded 為 true 時，右側的 HTML 才會被渲染到畫面上。
  */
-export default function EmploymentArea({ 
+export default function EmploymentCard({ 
   company, 
   role, 
   product, 

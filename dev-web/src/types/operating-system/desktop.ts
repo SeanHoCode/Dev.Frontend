@@ -60,7 +60,7 @@ export interface DesktopApp {
 
   /**
    * 外部或路由連結 (可選)
-   * 若提供此欄位 (如 '/resume' 或 'https://...'):
+   * 若提供此欄位 (如 '/resume/employment' 或 'https://...'):
    * 點擊圖示時不會開啟桌面視窗，而是直接導航或新開分頁。
    */
   href?: string;
@@ -131,7 +131,7 @@ export interface StartMenuItem {
   /** 顯示圖示 (可為 Lucide 圖示名稱字串，或 React 元件) */
   icon: string | ElementType;
 
-  /** 頁面路由路徑 (點擊後直接跳轉，如 '/resume') (可選) */
+  /** 頁面路由路徑 (點擊後直接跳轉，如 '/resume/employment') (可選) */
   href?: string;
 
   /** 自訂動作指令 (例如 'open_settings'、'toggle_theme') (可選) */

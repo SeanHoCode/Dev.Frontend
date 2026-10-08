@@ -3,18 +3,18 @@
 
 import React from 'react';
 // 引入經歷單項卡片元件
-import EmploymentArea from '@/components/resume/EmploymentArea';
+import EmploymentCard from '@/components/resume/EmploymentCard';
 // 引入封裝了 API 請求與載入中/錯誤狀態的 Custom Hook
-import { useResume } from '@/hooks/useResume';
+import { useEmployment } from '@/hooks/useEmployment';
 
 /**
- * 履歷列表客戶端容器元件 (ResumeView - Container Component)
+ * 經歷列表客戶端容器元件 (EmploymentView - Container Component)
  * 
  * 【主要作用與職責 (Core Purpose)】：
- * 本元件是履歷模組的業務容器元件 (Container Component)，負責：
- * 1. 驅動資料獲取生命週期：調用 `useResume` 自訂 Hook 向服務層請求工作經歷資料。
+ * 本元件是經歷模組的業務容器元件 (Container Component)，負責：
+ * 1. 驅動資料獲取生命週期：調用 `useEmployment` 自訂 Hook 向服務層請求工作經歷資料。
  * 2. 狀態機三態畫面流轉：根據 Hook 回傳的 `isLoading`、`error` 與 `employments`，精準切換載入提示、錯誤警示或成功清單。
- * 3. 陣列迴圈渲染：將收到的 `employments` 陣列透過 `.map()` 動態迭代為多張 `<EmploymentArea />` 卡片並綁定唯一 key。
+ * 3. 陣列迴圈渲染：將收到的 `employments` 陣列透過 `.map()` 動態迭代為多張 `<EmploymentCard />` 卡片並綁定唯一 key。
  * 
  * 【初學者觀念 - 三態畫面處理 (Loading / Error / Success)】：
  * 1. 任何非同步網路請求 (Async Request) 在前端通常有三個生命週期階段：
@@ -25,15 +25,15 @@ import { useResume } from '@/hooks/useResume';
  *    在 React 渲染迴圈陣列時，必須給每個根項目唯一的 `key` 屬性 (例如 key={exp.id})。
  *    React 的 Virtual DOM 比對機制仰賴 key 來辨識哪些元素被新增、刪除或移動，避免重新繪製整個列表。
  */
-export function ResumeView() {
+export function EmploymentView() {
   // 從自訂 Hook 中取得資料狀態、是否正在載入，以及是否有錯誤
-  const { employments, isLoading, error } = useResume();
+  const { employments, isLoading, error } = useEmployment();
 
   // 【階段 1：載入中狀態】
   if (isLoading) {
     return (
       <div className="p-6 text-center text-muted-foreground text-sm">
-        履歷資料載入中...
+        經歷資料載入中...
       </div>
     );
   }
@@ -42,7 +42,7 @@ export function ResumeView() {
   if (error) {
     return (
       <div className="p-6 text-center text-red-500 text-sm">
-        無法載入履歷資料，請稍後再試。
+        無法載入經歷資料，請稍後再試。
       </div>
     );
   }
@@ -52,10 +52,10 @@ export function ResumeView() {
     <section className="space-y-4">
       {/* 
         使用 Array.prototype.map() 進行列表渲染：
-        遍歷 employments 陣列中的每一筆經歷資料 (exp)，並回傳一個 <EmploymentArea /> 元件 
+        遍歷 employments 陣列中的每一筆經歷資料 (exp)，並回傳一個 <EmploymentCard /> 元件 
       */}
       {employments.map((exp) => (
-        <EmploymentArea
+        <EmploymentCard
           // 提供唯一 key (優先使用資料庫 ID，若無則以公司名稱與職稱拼接做為備援)
           key={exp.id || `${exp.company}-${exp.role}`}
           company={exp.company}

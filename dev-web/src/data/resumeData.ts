@@ -5,7 +5,7 @@ import { Employment } from '@/types/resume/resume';
  * 【初學者筆記：履歷模擬資料 (Resume Mock Data)】
  * 
  * 1. 為什麼要抽離到獨立的資料檔？
- *    - 關注點分離 (Separation of Concerns)：畫面元件 (`ResumeView.tsx`) 只負責「如何把資料美美地印在畫面上」，
+ *    - 關注點分離 (Separation of Concerns)：畫面元件 (`EmploymentView.tsx`) 只負責「如何把資料美美地印在畫面上」，
  *      而不應該在元件內部把資料寫死。
  *    - 未來若串接真正的資料庫與後端 API，畫面元件完全不用改動，只需替換掉 `services/resume/resumeService.ts`
  *      的抓取來源即可。
