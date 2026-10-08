@@ -30,14 +30,7 @@ export function useDesktopEnvironment() {
   // 取得所有可用 App 與依據 ID 查詢的方法
   const { apps, getAppById } = useDesktopApps();
   // 取得開啟中的視窗列表與開/關/最小化等控制方法
-  const { windows, openWindow, closeWindow, toggleMinimize, closeAllWindows } = useWindowContext();
-
-  // 監聽元件卸載：離開首頁路由時強制重設所有開啟的視窗
-  useEffect(() => {
-    return () => {
-      closeAllWindows();
-    };
-  }, [closeAllWindows]);
+  const { windows, openWindow, closeWindow, toggleMinimize, closeAllWindows, focusWindow } = useWindowContext();
 
   /**
    * 輔助解析函式：輸入開啟中視窗的 windowId，找出對應的 App 資訊與 React 元件

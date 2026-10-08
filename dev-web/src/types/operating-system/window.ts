@@ -55,5 +55,10 @@ export interface WindowContextType {
    * 清空 windows 陣列 (例如「顯示桌面」或重置系統時使用)
    */
   closeAllWindows: () => void;
+
+  /**
+   * 將指定 ID 的視窗提升至最上層前景 (Focus / Bring to Front)
+   */
+  focusWindow?: (id: string) => void;
 }
 

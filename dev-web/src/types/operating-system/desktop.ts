@@ -81,6 +81,11 @@ export interface DesktopApp {
    * 例如: 400 代表 400px
    */
   defaultHeight?: number;
+
+  /**
+   * 是否釘選至開始功能表常用/釘選清單 (可選，若未設定則依系統預設或不釘選)
+   */
+  isPinned?: boolean;
 }
 
 /**
@@ -131,6 +136,12 @@ export interface StartMenuItem {
 
   /** 自訂動作指令 (例如 'open_settings'、'toggle_theme') (可選) */
   action?: string;
+
+  /** 自訂搜尋關鍵字 (例如 ['履歷', 'resume', 'cv']) (可選) */
+  keywords?: string[];
+
+  /** 是否釘選至開始功能表的「常用/釘選清單」 (可選，預設為 false) */
+  isPinned?: boolean;
 
   /** 子選單陣列 (遞迴結構，若有值代表此項目為可展開的父選單) (可選) */
   children?: StartMenuItem[];

@@ -16,6 +16,7 @@ export interface WindowProps {
   isMinimized?: boolean;         // 視窗是否處於最小化隱藏狀態 (選填，預設 false)
   onMinimize?: () => void;       // 點擊最小化按鈕時的回呼函式 (選填)
   onClose: () => void;           // 點擊關閉按鈕時的回呼函式
+  onFocus?: () => void;          // 點擊視窗聚焦至最前景的回呼函式 (選填)
   children: React.ReactNode;     // 視窗內容插槽 (傳入具體的 App 元件，如 <AboutMeApp />)
 }
 
@@ -42,6 +43,7 @@ export function Window({
   isMinimized = false, 
   onMinimize, 
   onClose, 
+  onFocus,
   children 
 }: WindowProps) {
   // 從 Hook 取得計算後的樣式 (定位 top/left/width/height)、最大化狀態、與滑鼠點擊拖曳監聽事件
@@ -57,6 +59,7 @@ export function Window({
     // - rounded-lg: 未最大化時有圓角，最大化時填滿直角
     // - isMinimized ? 'hidden' : '': 最小化時套用 CSS display: none 隱藏，但保留在 DOM 中維持內部狀態
     <div 
+      onMouseDown={onFocus}
       className={`absolute z-30 flex flex-col bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 pointer-events-auto ${
         isMaximized ? '' : 'rounded-lg'
       } ${isMinimized ? 'hidden' : ''}`}

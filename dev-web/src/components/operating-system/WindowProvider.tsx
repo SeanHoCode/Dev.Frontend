@@ -39,8 +39,8 @@ export function WindowProvider({ children }: { children: React.ReactNode }) {
       // 檢查該視窗是否已經在桌面開啟中
       const exists = prev.find((w) => w.id === id);
       if (exists) {
-        // 若已開啟過，確保將其「取消最小化」(minimized: false) 帶回前景
-        return prev.map((w) => w.id === id ? { ...w, minimized: false } : w);
+        // 若已開啟過，確保將其「取消最小化」(minimized: false) 並移至陣列末端帶回最上層前景
+        return [...prev.filter((w) => w.id !== id), { ...exists, minimized: false }];
       }
       // 若尚未開啟，將新視窗物件加入陣列末端 (展開運算子 ...prev 保留既有視窗)
       return [...prev, { id, minimized: false }];
@@ -59,14 +59,24 @@ export function WindowProvider({ children }: { children: React.ReactNode }) {
     ));
   };
 
-  // 關閉所有視窗 (當使用者離開首頁路由時調用)
+  // 將視窗提升至最上層前景 (Focus Window)
+  const focusWindow = (id: string) => {
+    setWindows((prev) => {
+      const target = prev.find((w) => w.id === id);
+      if (!target) return prev;
+      if (prev[prev.length - 1]?.id === id) return prev;
+      return [...prev.filter((w) => w.id !== id), target];
+    });
+  };
+
+  // 關閉所有視窗
   const closeAllWindows = () => {
     setWindows([]);
   };
 
   return (
     // 將所有狀態與操作函式包裹為物件，傳遞給 Provider
-    <WindowContext.Provider value={{ windows, openWindow, closeWindow, toggleMinimize, closeAllWindows }}>
+    <WindowContext.Provider value={{ windows, openWindow, closeWindow, toggleMinimize, closeAllWindows, focusWindow }}>
       {children}
     </WindowContext.Provider>
   );

@@ -76,9 +76,9 @@ export function Taskbar() {
         
         {/* 
           動態顯示開啟中的 App 縮圖：
-          - 僅在首頁 ("/") 且目前有開啟中的視窗 (windows.length > 0) 時才顯示
+          - 支援全站所有頁面！只要目前有開啟中的視窗 (windows.length > 0) 即可切換最小化/還原
         */}
-        {pathname === '/' && windows.length > 0 && (
+        {windows.length > 0 && (
           <>
             {/* 垂直分隔線 */}
             <div className="w-px h-6 bg-gray-300 dark:bg-white/20 mx-1"></div>

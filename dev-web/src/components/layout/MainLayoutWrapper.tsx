@@ -10,6 +10,9 @@ import { usePathname } from 'next/navigation';
 // 引入底部工作列元件
 import { Taskbar } from '@/components/operating-system/Taskbar';
 
+// 引入全域視窗宿主元件 (負責在所有頁面浮動渲染開啟中的 App 視窗)
+import { WindowHost } from '@/components/operating-system/WindowHost';
+
 // 引入視窗狀態提供者 (管理視窗的開啟、關閉、最小化狀態)
 import { WindowProvider } from '@/components/operating-system/WindowProvider';
 
@@ -63,6 +66,9 @@ export function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
             </div>
           </main>
         )}
+
+        {/* 全域視窗宿主層 (浮動於全站所有頁面之上，支援跨頁面開啟與多工操作) */}
+        <WindowHost />
 
         {/* 全域底部工作列 (Windows Taskbar，固定釘在螢幕底部最下緣) */}
         <Taskbar />

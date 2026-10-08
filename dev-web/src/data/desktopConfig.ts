@@ -1,5 +1,5 @@
 import { DesktopApp, StartMenuItem } from '@/types/operating-system/desktop';
-import { FileText, Folder, User, Settings, LayoutGrid, Moon } from 'lucide-react';
+import { FileText, User, Settings, LayoutGrid, Moon } from 'lucide-react';
 
 /**
  * ==============================================================================
@@ -29,7 +29,8 @@ export const initialDesktopApps: DesktopApp[] = [
     icon: 'User',                 // 儲存 Lucide 圖示名稱字串，易於後端 API 序列化 JSON 傳遞
     component: 'AboutMeApp',      // 對應 appRegistry 內註冊的元件名稱
     windowId: 'about_me',
-    description: '個人簡介與專業技能' 
+    description: '個人簡介與專業技能',
+    isPinned: true                // 釘選至開始功能表常用/釘選清單
   },
   // 【擴充範例】：未來若有新的 Side Projects 想要放到桌面上，解開下方註解即可：
   // { 
@@ -39,7 +40,8 @@ export const initialDesktopApps: DesktopApp[] = [
   //   icon: 'Folder', 
   //   component: 'ProjectsApp', 
   //   windowId: 'projects',
-  //   description: '專案作品展示' 
+  //   description: '專案作品展示',
+  //   isPinned: true
   // },
 ];
 
@@ -59,17 +61,27 @@ export const desktopApps = initialDesktopApps;
 export const startMenuItems: StartMenuItem[] = [
   { 
     id: 'home', 
-    label: '首頁 (Desktop)', 
+    label: '首頁', 
     icon: LayoutGrid, 
-    href: '/' 
+    href: '/',
+	isPinned: true,
+    keywords: ['首頁', 'home', 'desktop', '桌面', '主頁']
   },
   {
-    id: 'portfolio',
-    label: '作品與經歷',
+    id: 'resume',
+    label: '履歷',
     icon: User,
+    keywords: ['履歷', 'resume'],
     // children 陣列代表子選單，滑鼠懸停或點擊展開時顯示
     children: [
-      { id: 'resume', label: '關於我 & 履歷', icon: FileText, href: '/resume' },
+      { 
+        id: 'employment', 
+        label: '經歷', 
+        icon: FileText, 
+        href: '/resume/employment',
+        isPinned: true,           // 釘選至開始功能表常用清單 (支援頁面捷徑)
+        keywords: ['經歷', '技能', '工作經驗', 'employment', 'experience', 'skill']
+      },
       // { id: 'projects', label: 'Side Projects', icon: Folder, href: '/projects' },
     ]
   },
@@ -77,10 +89,23 @@ export const startMenuItems: StartMenuItem[] = [
     id: 'system',
     label: '系統與帳號',
     icon: Settings,
+    keywords: ['系統', '帳號', 'system', 'account', '設定'],
     children: [
       // action 表示點擊後不是跳轉網址，而是執行某個作業系統指令
-      { id: 'settings', label: '系統設定', icon: Settings, action: 'open_settings' },
-      { id: 'theme', label: '切換深淺色模式', icon: Moon, action: 'toggle_theme' },
+      { 
+        id: 'settings', 
+        label: '系統設定', 
+        icon: Settings, 
+        action: 'open_settings',
+        keywords: ['系統設定', '設定', 'settings', 'config', '偏好設定'] 
+      },
+      { 
+        id: 'theme', 
+        label: '切換深淺色模式', 
+        icon: Moon, 
+        action: 'toggle_theme',
+        keywords: ['主題', '深色', '淺色', '深色模式', '淺色模式', 'theme', 'dark', 'light', '夜間模式']
+      },
     ]
   }
 ];

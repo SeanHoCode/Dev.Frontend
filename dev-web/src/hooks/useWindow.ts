@@ -20,66 +20,86 @@ export interface UseWindowOptions {
  * 2. 標題列滑鼠拖曳運算 (Drag Physics)：註冊全域 `mousemove` 與 `mouseup`，配合 `useRef` 低開銷地計算滑鼠相對位移量。
  * 3. 最大化／還原切換：維護 `isMaximized` 布林狀態，在全螢幕佈局與自由浮動位置之間切換。
  * 4. 動態 CSS 樣式產出：整合產生即時的 `windowStyle` (含 top, left, width, height)，供 `Window.tsx` 元件直接綁定。
- * 
- * 【初學者觀念 - 滑鼠拖曳 (Drag & Drop) 數學原理與 useRef 暫存】：
- * 1. 拖曳的數學邏輯：
- *    - 當滑鼠在標題列按下 (mousedown)：記錄按下瞬間的滑鼠游標螢幕座標 (startX, startY)，
- *      以及視窗當時的左上角初始座標 (initialX, initialY)。
- *    - 當滑鼠移動時 (mousemove)：
- *      位移量 dx = e.clientX - startX;
- *      位移量 dy = e.clientY - startY;
- *      視窗新座標 = { x: initialX + dx, y: initialY + dy }。
- *    - 當放開滑鼠 (mouseup)：將 isDragging 設為 false，結束拖曳。
- * 2. 為什麼 dragRef 使用 useRef 而不是 useState？
- *    因為滑鼠在螢幕上移動時，mousemove 每秒會觸發數十甚至數百次。
- *    若將 startX 等中間計算變數放在 useState，每次賦值都會觸發重新渲染，造成畫面卡頓；
- *    放在 useRef 中修改不會觸發額外的 React 重新渲染，效能極佳。
  */
 export function useWindow({ isOpen, defaultPosition = { x: 100, y: 100 } }: UseWindowOptions) {
+  // 輔助函式：計算螢幕中央座標 (避免初次繪製時出現在非預期位置再跳動)
+  const calculateCenterPosition = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      return {
+        x: Math.max(0, Math.round((window.innerWidth - 600) / 2)),
+        y: Math.max(0, Math.round((window.innerHeight - 500) / 2)),
+      };
+    }
+    return defaultPosition;
+  }, [defaultPosition]);
+
   // isMaximized: 視窗是否最大化 (填滿全螢幕)
   const [isMaximized, setIsMaximized] = useState(false);
-  // position: 視窗當前的左上角像素座標 { x, y }
-  const [position, setPosition] = useState(defaultPosition);
+  // position: 視窗當前的左上角像素座標 { x, y } (利用惰性初始化，初次渲染即精準置中，徹底消除位置跳動)
+  const [position, setPosition] = useState<{ x: number; y: number }>(() => calculateCenterPosition());
   // isDragging: 當前是否正在被使用者拖曳中
   const [isDragging, setIsDragging] = useState(false);
 
   // dragRef: 暫存拖曳開始瞬間的座標基準點
   const dragRef = useRef<{ startX: number; startY: number; initialX: number; initialY: number } | null>(null);
 
-  // 【生命週期 1：視窗開啟時自動置中】
+  // 記錄前一次的 isOpen 狀態，避免在元件初次掛載時發起多餘的非同步重設
+  const prevOpenRef = useRef(isOpen);
+
+  // 【生命週期 1：視窗開啟狀態變化時的重設處理】
   useEffect(() => {
     if (!isOpen) {
       // 關閉視窗時，重設最大化狀態
       setIsMaximized(false);
-    } else {
-      // 開啟視窗時，計算螢幕中央座標
-      if (typeof window !== 'undefined') {
-        setPosition({
-          x: Math.max(0, window.innerWidth / 2 - 300),   // 寬度 600px 的一半為 300
-          y: Math.max(0, window.innerHeight / 2 - 250),  // 高度 500px 的一半為 250
-        });
-      }
+    } else if (!prevOpenRef.current && isOpen) {
+      // 視窗由關閉狀態重新開啟時，重新置中
+      setPosition(calculateCenterPosition());
     }
-  }, [isOpen]);
+    prevOpenRef.current = isOpen;
+  }, [isOpen, calculateCenterPosition]);
 
-  // 【生命週期 2：拖曳時監聽全螢幕滑鼠移動與放開】
+  // 【生命週期 2：監聽螢幕尺寸變更，避免縮小瀏覽器時視窗飄出視線外】
   useEffect(() => {
+    const handleResize = () => {
+      setPosition((prev) => ({
+        x: Math.min(prev.x, Math.max(0, window.innerWidth - 300)),
+        y: Math.min(prev.y, Math.max(0, window.innerHeight - 200)),
+      }));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 【生命週期 3：拖曳時監聽全螢幕滑鼠移動與放開】
+  useEffect(() => {
+    let rafId: number | null = null;
+
     const handleMouseMove = (e: MouseEvent) => {
       // 若沒有在拖曳中，或視窗目前最大化中，則忽略滑鼠移動
       if (!isDragging || !dragRef.current || isMaximized) return;
       
       const dx = e.clientX - dragRef.current.startX;
       const dy = e.clientY - dragRef.current.startY;
-      
-      // 更新視窗新座標
-      setPosition({
-        x: dragRef.current.initialX + dx,
-        y: dragRef.current.initialY + dy,
+      const nextX = dragRef.current.initialX + dx;
+      const nextY = dragRef.current.initialY + dy;
+
+      // 使用 requestAnimationFrame 節流更新，使位置計算與螢幕更新率同步（避免高頻滑鼠事件造成卡頓）
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(() => {
+        setPosition({
+          x: nextX,
+          y: nextY,
+        });
       });
     };
 
     // 放開滑鼠時結束拖曳
     const handleMouseUp = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       setIsDragging(false);
     };
 
@@ -91,6 +111,9 @@ export function useWindow({ isOpen, defaultPosition = { x: 100, y: 100 } }: UseW
 
     // 清理函式：拖曳結束或元件卸載時移除事件
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
