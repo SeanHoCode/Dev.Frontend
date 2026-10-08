@@ -1,9 +1,43 @@
+/**
+ * ==============================================================================
+ * 【全域樣式與 Tailwind CSS v4 設定檔 (globals.css)】
+ * 
+ * 【主要作用與職責 (Core Purpose)】：
+ * 本檔案是整個 Web 應用的基礎外觀與樣式核心規範庫，負責：
+ * 1. 載入 Tailwind v4 核心引擎：透過 `@import "tailwindcss"` 取代舊版 tailwind.config.js 設定。
+ * 2. 統一定義設計系統變數 (Design Tokens)：在 `@theme inline` 與 `:root` 中宣告全站顏色（OKLCH 色彩空間）、圓角半徑與字型。
+ * 3. 實現全站深淺色主題切換 (Dark/Light Mode)：利用 `:root` 與 `.dark` 覆蓋 CSS 變數，配合 next-themes 提供即時無縫換色。
+ * 4. 注入基礎原生標籤樣式：透過 `@layer base` 統一全站元素邊框、背景底色與預設無襯線字體渲染規則。
+ * 
+ * 【初學者筆記】：
+ * 1. 什麼是 Tailwind CSS v4？
+ *    - 在 Tailwind CSS v4 中，不再需要獨立的 tailwind.config.js，
+ *      而是直接在 CSS 檔案中使用 `@import "tailwindcss"` 與 `@theme` 進行設定。
+ * 
+ * 2. 什麼是 OKLCH 色彩空間？
+ *    - 你會看到 `oklch(1 0 0)` 或 `oklch(0.5 0.134 242.749)` 這種顏色表示法。
+ *    - OKLCH 是現代 CSS 的新型色彩空間，包含三個參數：
+ *      - L (Lightness, 亮度): 0 (黑) ~ 1 (白)
+ *      - C (Chroma, 彩度/飽和度): 0 (灰階) ~ 更大數值
+ *      - H (Hue, 色相環角度): 0 ~ 360 度
+ *      OKLCH 相比傳統 hex/rgb，在人眼感知亮度上更均勻，非常適合做深淺色主題調色。
+ * 
+ * 3. 深色模式 (Dark Mode) 是如何運作的？
+ *    - 在 `:root` 中定義淺色模式的變數 (如 `--background: 白色`, `--foreground: 深灰`)。
+ *    - 在 `.dark` 中定義深色模式的變數 (如 `--background: 深黑`, `--foreground: 白`)。
+ *    - 當我們在前端透過 `next-themes` 切換主題時，它會在 `<html>` 標籤加上 `class="dark"`，
+ *      這時所有引用這些 CSS 變數的元件就會自動換色，達成無縫的主題切換！
+ * ==============================================================================
+ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* 自訂深色變體選取器：當祖先元素有 .dark 時啟用 */
 @custom-variant dark (&:is(.dark *));
 
+/* Tailwind v4 主題對應：將 CSS 原生變數映射至 Tailwind class (例如 bg-background, text-primary) */
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
@@ -47,31 +81,35 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* -------------------------------------------------------------------------
+ * 【淺色主題 (Light Mode) 基礎色彩設定】
+ * 定義於 :root 虛擬類別中，為全站預設顏色。
+ * ------------------------------------------------------------------------- */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.5 0.134 242.749);
-    --primary-foreground: oklch(0.977 0.013 236.62);
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --background: oklch(1 0 0);                    /* 全站背景色 (白) */
+    --foreground: oklch(0.145 0 0);                /* 全站主要文字色 (深黑) */
+    --card: oklch(1 0 0);                          /* 卡片容器背景色 */
+    --card-foreground: oklch(0.145 0 0);           /* 卡片內文字色 */
+    --popover: oklch(1 0 0);                       /* 彈跳視窗/選單背景色 */
+    --popover-foreground: oklch(0.145 0 0);        /* 彈跳選單文字色 */
+    --primary: oklch(0.5 0.134 242.749);           /* 主色調 (品牌主色，如藍色系) */
+    --primary-foreground: oklch(0.977 0.013 236.62);/* 主色調按鈕上的文字色 (白) */
+    --secondary: oklch(0.967 0.001 286.375);       /* 次要背景色 */
+    --secondary-foreground: oklch(0.21 0.006 285.885); /* 次要文字色 */
+    --muted: oklch(0.97 0 0);                      /* 柔和/次要輔助背景色 */
+    --muted-foreground: oklch(0.556 0 0);          /* 灰色說明文字色 */
+    --accent: oklch(0.97 0 0);                     /* 懸停或強調背景色 */
+    --accent-foreground: oklch(0.205 0 0);         /* 強調文字色 */
+    --destructive: oklch(0.577 0.245 27.325);      /* 危險/刪除警示色 (紅色) */
+    --border: oklch(0.922 0 0);                    /* 元件邊框色 */
+    --input: oklch(0.922 0 0);                     /* 輸入框邊框色 */
+    --ring: oklch(0.708 0 0);                      /* 聚焦時的光暈色 (Focus ring) */
     --chart-1: oklch(0.828 0.111 230.318);
     --chart-2: oklch(0.685 0.169 237.323);
     --chart-3: oklch(0.588 0.158 241.966);
     --chart-4: oklch(0.5 0.134 242.749);
     --chart-5: oklch(0.443 0.11 240.79);
-    --radius: 0.625rem;
+    --radius: 0.625rem;                            /* 圓角基礎半徑 (10px) */
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.588 0.158 241.966);
@@ -82,10 +120,14 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* -------------------------------------------------------------------------
+ * 【深色主題 (Dark Mode) 色彩覆蓋】
+ * 當 html 帶有 .dark 類別時，會自動覆蓋上述變數為暗黑模式專用色彩。
+ * ------------------------------------------------------------------------- */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
+    --background: oklch(0.145 0 0);                /* 暗黑背景色 */
+    --foreground: oklch(0.985 0 0);                /* 暗黑文字色 (亮白) */
+    --card: oklch(0.205 0 0);                      /* 暗黑卡片背景 */
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
@@ -98,7 +140,7 @@
     --accent: oklch(0.269 0 0);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
+    --border: oklch(1 0 0 / 10%);                  /* 半透明邊框 */
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
     --chart-1: oklch(0.828 0.111 230.318);
@@ -116,14 +158,21 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* -------------------------------------------------------------------------
+ * 【基礎全域樣式注入 (@layer base)】
+ * @apply 允許我們直接把 Tailwind 工具類別應用到 HTML 原生標籤上。
+ * ------------------------------------------------------------------------- */
 @layer base {
+  /* 所有元素預設套用 border 色彩與 focus 外框顏色 */
   * {
     @apply border-border outline-ring/50;
-    }
+  }
+  /* body 標籤預設繼承主題背景與前景字色 */
   body {
     @apply bg-background text-foreground;
-    }
+  }
+  /* html 預設套用無襯線字型 */
   html {
     @apply font-sans;
-    }
-}
+  }
+}
